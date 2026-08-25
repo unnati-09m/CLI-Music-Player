@@ -1,22 +1,92 @@
-function render(songs, state) {
-  console.clear();
+import state from "./state.js";
 
-  console.log("🎶 MUSIC PLAYER 🎶\n");
+let previousLines = 0;
 
-  for (let i = 0; i < songs.length; i++) {
-    const songName = songs[i].split(".")[0];
+export function render() {
+
+  // Move cursor back to previous UI
+  if (previousLines > 0) {
+    process.stdout.write(`\x1b[${previousLines}A`);
+  }
+
+  const lines = [];
+
+  lines.push("🎶 CLI MUSIC PLAYER 🎶");
+  lines.push("");
+
+  for (let i = 0; i < state.songs.length; i++) {
 
     if (i + 1 === state.selectedSong) {
-      console.log(`→ ${i + 1}. ${songName}`);
+      lines.push(`→ ${i + 1}: ${state.songs[i]}`);
     } else {
-      console.log(`  ${i + 1}. ${songName}`);
+      lines.push(`  ${i + 1}: ${state.songs[i]}`);
     }
   }
 
-  console.log("\n↑ ↓ Navigate");
-  console.log("Enter Play");
-  console.log("P Pause / Resume");
-  console.log("Q Quit");
+  lines.push("");
+
+  if (state.playingSong !== null) {
+
+    const song = state.songs[state.playingSong - 1];
+
+    lines.push(`🎵 Playing: ${song}`);
+
+    const percentage =
+      state.duration > 0
+        ? (state.currentTime / state.duration) * 100
+        : 0;
+
+    const barLength = 20;
+    const filled = Math.floor(
+      (percentage / 100) * barLength
+    );
+
+    const bar =
+      "█".repeat(filled) +
+      "░".repeat(barLength - filled);
+
+    lines.push(
+      `[${bar}] ${percentage.toFixed(0)}%`
+    );
+
+    lines.push(
+      `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`
+    );
+
+    lines.push(
+      state.isPaused ? "⏸ PAUSED" : "▶ PLAYING"
+    );
+
+  } else {
+    lines.push("No song playing");
+  }
+
+  lines.push("");
+  lines.push("↑ ↓ Navigate | Enter Play | P Pause/Resume | + Jump 10s | Q Quit");
+
+  // Clear old lines
+  for (let i = 0; i < lines.length; i++) {
+    process.stdout.write("\x1b[2K\r");
+
+    if (i < lines.length - 1) {
+      process.stdout.write("\n");
+    }
+  }
+
+  // Move back to first UI line
+  process.stdout.write(`\x1b[${lines.length - 1}A`);
+
+  // Draw new UI
+  process.stdout.write(lines.join("\n"));
+
+  previousLines = lines.length;
 }
 
-module.exports = { render };
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return "0:00";
+
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
+}

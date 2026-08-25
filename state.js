@@ -1,8 +1,13 @@
 const state = {
+  songs: [],
+
   selectedSong: 1,
   playingSong: null,
-  playerProcess: null,
-  isPaused: false
+
+  isPaused: false,
+
+  currentTime: 0,
+  duration: 0
 };
 
-module.exports = state;
+export default state;

@@ -1,19 +1,21 @@
-const fs = require("fs");
+import fs from "fs";
 
-const state = require("./state");
-const { render } = require("./ui");
-const { setupInput } = require("./inputHandler");
+import state from "./state.js";
+import { handleInput } from "./inputHandler.js";
+import { render } from "./ui.js";
 
+const songsPath = "./songs";
 
-// Load songs
-const songs = fs
-  .readdirSync("./songs")
-  .filter((file) => file.endsWith(".mp3"));
+state.songs = fs
+  .readdirSync(songsPath)
+  .filter(song => song.endsWith(".mp3"));
 
+process.stdin.setEncoding("utf-8");
 
-// Initial render
-render(songs, state);
+process.stdin.setRawMode(true);
 
+render();
 
-// Start keyboard handling
-setupInput(songs, state, render);
+process.stdin.on("data", async (input) => {
+  await handleInput(input);
+});
