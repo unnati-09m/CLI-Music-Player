@@ -4,9 +4,9 @@ let previousLines = 0;
 
 export function render() {
 
-  // Move cursor back to previous UI
+  // Move cursor to the first line of the previous UI
   if (previousLines > 0) {
-    process.stdout.write(`\x1b[${previousLines}A`);
+    process.stdout.write(`\x1b[${previousLines - 1}A`);
   }
 
   const lines = [];
@@ -37,6 +37,7 @@ export function render() {
         : 0;
 
     const barLength = 20;
+
     const filled = Math.floor(
       (percentage / 100) * barLength
     );
@@ -64,19 +65,24 @@ export function render() {
   lines.push("");
   lines.push("↑ ↓ Navigate | Enter Play | P Pause/Resume | + Jump 10s | Q Quit");
 
-  // Clear old lines
-  for (let i = 0; i < lines.length; i++) {
+  // Clear the old UI
+  for (let i = 0; i < previousLines; i++) {
+
     process.stdout.write("\x1b[2K\r");
 
-    if (i < lines.length - 1) {
+    if (i < previousLines - 1) {
       process.stdout.write("\n");
     }
   }
 
-  // Move back to first UI line
-  process.stdout.write(`\x1b[${lines.length - 1}A`);
+  // Move back to the first line
+  if (previousLines > 0) {
+    process.stdout.write(`\x1b[${previousLines - 1}A`);
+  }
 
-  // Draw new UI
+  process.stdout.write("\r");
+
+  // Draw the new UI
   process.stdout.write(lines.join("\n"));
 
   previousLines = lines.length;
