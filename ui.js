@@ -14,6 +14,12 @@ export function render() {
   lines.push("🎶 CLI MUSIC PLAYER 🎶");
   lines.push("");
 
+if (state.songs.length === 0) {
+
+  lines.push("No MP3 songs found in the songs folder.");
+
+} else {
+
   for (let i = 0; i < state.songs.length; i++) {
 
     if (i + 1 === state.selectedSong) {
@@ -22,6 +28,7 @@ export function render() {
       lines.push(`  ${i + 1}: ${state.songs[i]}`);
     }
   }
+} ;
 
   lines.push("");
 
