@@ -63,7 +63,9 @@ export function render() {
   }
 
   lines.push("");
-  lines.push("↑ ↓ Navigate | Enter Play | P Pause/Resume | + Jump 10s | Q Quit");
+  lines.push(
+  "↑ ↓ Navigate | Enter Play | P Pause/Resume | + Forward 10s | - Back 10s | Q Quit"
+);
 
   // Clear the old UI
   for (let i = 0; i < previousLines; i++) {

@@ -128,3 +128,14 @@ export function jumpForward() {
 
   state.currentTime = newTime;
 }
+export function jumpBackward() {
+  if (!currentAudio) return;
+
+  const newTime = Math.max(
+    currentAudio.currentTime - 10,
+    0
+  );
+
+  currentAudio.seek(newTime);
+  state.currentTime = newTime;
+}

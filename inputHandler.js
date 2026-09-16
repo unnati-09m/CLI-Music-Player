@@ -77,4 +77,9 @@ export async function handleInput(input) {
     render();
     return;
   }
+  if (input === "-") {
+    jumpBackward();
+    render();
+    return;
+  }
 }
