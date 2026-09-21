@@ -116,7 +116,7 @@ export function stopSong() {
 }
 
 export function jumpForward() {
-
+  
   if (!currentAudio) return;
 
   const newTime = Math.min(
@@ -125,9 +125,9 @@ export function jumpForward() {
   );
 
   currentAudio.seek(newTime);
-
   state.currentTime = newTime;
 }
+
 export function jumpBackward() {
   if (!currentAudio) return;
 
