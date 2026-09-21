@@ -4,7 +4,8 @@ import {
   pauseSong,
   resumeSong,
   stopSong,
-  jumpForward
+  jumpForward,
+  jumpBackward
 } from "./player.js";
 
 import { render } from "./ui.js";
